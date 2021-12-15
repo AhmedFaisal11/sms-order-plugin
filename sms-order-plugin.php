@@ -86,26 +86,28 @@ function thecodifica_send_sms_on_new_order_note($email_args){
 
 function thecodifica_send_sms_to_admin($order_id , $old_status , $new_status , $order){
     $my_order = wc_get_order($order_id);
-    $orderId = $my_order->get_order_number();
 
     $first_name = $my_order->get_billing_first_name();
 
-    $today = date("D M j G:i:s T Y");
-    $phone_number = '03355401689';
+    $new_first_name = $my_order->get_shipping_first_name();
+    
+    // $trackingnumber = '';
 
-    // $shop_name = get_option( 'woocommerce_email_from_name' );
+    $tracking_id = get_post_meta($my_order->get_order_number(), 'Tracking_ID', true);
+
+    $phone_number = '03115380875';
+
+    $shop_name = get_option( 'woocommerce_email_from_name' );
 
     if($my_order->status == 'processing'){
-        $default_message = "Thank you $first_name for shopping with EZPharmacy. Your order number $orderId is in processing";
+        $default_message = "Thank you $first_name for shopping with EZPharmacy. Your order number $order_id is in processing";
     }elseif($my_order->status == 'on-hold'){
         $default_message = "Thank you for shopping, $first_name. Your order status has been set to on-hold. We'll get back to you shortly";
     }elseif($my_order->status == 'completed'){
-        $default_message = "Thank you for shopping with us $first_name. Your Order $orderId has been set as completed. Make sure to give your review on our website! https://phar.ezshifa.com/";
+        $default_message = "Thank you for shopping with us $first_name. Your Order $order_id has been set as completed. Make sure to give your review on our website! https://phar.ezshifa.com/";
     }elseif($my_order->status == 'shipped'){
-        $default_message = "Thank you for shopping with us $first_name. Your order has been picked up by on $today . Your track code is ";
+        $default_message = "Thank you for shopping with us $first_name. Your order has been picked up by Lepord on 21/05/2021 . Your track code is $tracking_id";
     }
-
-
     send_sms_to_customer($phone_number , $default_message );
 
 }
